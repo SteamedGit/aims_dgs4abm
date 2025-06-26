@@ -1,0 +1,53 @@
+program: train.py
+metric:
+  name: test/loss
+  goal: minimize
+
+method: bayes
+parameters:
+  datasets:
+    value: SI_diag_grid_160_steps_20 
+  eval_every:
+    value: 10
+  model:
+    value: PriorCVAE
+  model.arch.path_length:
+    value: 21
+  model.arch.decoder_conf.arch.output_activation: 
+    value: flax.nnx.sigmoid
+  model.arch.latent_dim:
+      value: 12
+  model.arch.encoder_conf.arch.hidden_dim:
+    values: [[[128,128],[128,128],[128,128]],[[128,128],[128,128],[128,128],[128,128]],[[256,256], [256,256],[256,256]], [[256,256], [256,256],[256,256], [256, 256]], [[512,512], [512,512], [512,512]], [[512,512], [512,512], [512,512],[512,512]]] 
+  model.arch.decoder_conf.arch.hidden_dim:
+    values: [[[128,128],[128,128],[128,128]],[[128,128],[128,128],[128,128],[128,128]],[[256,256], [256,256]]] 
+  hyperparameters.optax.learning_rate:
+    min: 1e-6
+    max: 1e-2
+    distribution: log_uniform_values
+  hyperparameters.n_epochs:
+    values: [100,200]
+  hyperparameters.shuffle_every_epoch:
+    value: True
+  hyperparameters.train_batch_size:
+    value: 8192
+  hyperparameters.eval_batch_size:
+    value: 32768
+
+command:
+- ${env}
+- ${interpreter}
+- ${program}
+- "--config-name"
+- "basic"
+#Don't use checkpointing when sweeping
+- "logger.checkpointer.save_every=never"
+#These hydra options disable the creation of
+#output folders for all the runs
+- "hydra.output_subdir=null"
+- "hydra/job_logging=disabled"
+- "hydra/hydra_logging=disabled"
+- "hydra.run.dir=."
+#Tag the model architecture
+- "logger.kwargs.tags=[PriorCVAE,SI_diag_g160_s20]"
+- ${args_no_hyphens}

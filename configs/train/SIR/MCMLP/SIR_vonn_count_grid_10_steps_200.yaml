@@ -1,0 +1,55 @@
+defaults:
+  - datasets: SIR_vonn_count_grid_10_steps_200 
+  - _self_
+
+model:
+  arch:
+    _target_: surrogate.mc_dropout.MCMLP
+    input_dim: 7
+    path_length: 603
+    num_layers: 3
+    hidden_dim: 2048
+    p_drop: 0.5
+    output_activation: flax.nnx.sigmoid
+  loss_fn: surrogate.mc_dropout.loss_fn
+
+logger:
+  use_console: true
+  use_wandb: true
+  kwargs:
+    project: dgs4abm
+    tags:
+    - MCMLP
+    - SIR_vonn_count_g10_s200
+    - SOTA
+  checkpointer:
+    restore_path: null
+    save_every: 1000
+    max_to_keep: 10
+
+train_rng_seed: 0
+model_rng_seed: 0
+eval_every: 10
+fuse_train_and_test: true
+cloud_save: true
+hyperparameters:
+  n_epochs: 400
+  train_batch_size: 8192
+  eval_batch_size: 32768
+  shuffle_every_epoch: true
+  optax:
+    _target_: optax.adamw
+    learning_rate: 0.00046700889984696727
+metrics:
+  _target_: flax.nnx.MultiMetric
+  loss:
+    _target_: flax.nnx.metrics.Average
+    argname: loss
+
+  
+hydra:
+  searchpath:
+    - file://configs
+  run:
+    dir: trained_models/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  output_subdir: hydra

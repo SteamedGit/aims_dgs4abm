@@ -1,0 +1,76 @@
+model:
+  arch:
+    _target_: surrogate.mc_dropout.MCMLP
+    input_dim: 2
+    path_length: 21
+    num_layers: 3
+    hidden_dim: 256
+    p_drop: 0.5
+    output_activation: flax.nnx.sigmoid
+  loss_fn: surrogate.mc_dropout.loss_fn
+datasets:
+  train:
+    realisation: data/SI_diag_g160_s20/train_realisations.npy
+    param: data/SI_diag_g160_s20/train_param_labels.npy
+  test:
+    realisation: data/SI_diag_g160_s20/test_realisations.npy
+    param: data/SI_diag_g160_s20/test_param_labels.npy
+  dataset_folder: data/SI_diag_g160_s20
+  grid_size: 160
+  num_steps: 20
+  num_sims_per_param: 20
+  generation_seed: 0
+  train_prop: 0.9
+  neighbourhood: diagonal
+  get_abm_fn: abm.spatial_compartmental.si.get_abm
+  abm_summary_stats:
+    start: 1
+    end: 2
+  parameters:
+    p_infect:
+      low: 0.01
+      high: 0.801
+      step_size: 0.01
+  n_initials:
+    infected:
+      low: 0.01
+      high: 0.801
+      step_size: 0.01
+logger:
+  use_console: true
+  use_wandb: true
+  kwargs:
+    project: dgs4abm
+    tags:
+    - MCMLP
+    - SI_diag_g160_s20
+    - SOTA
+  checkpointer:
+    restore_path: null
+    save_every: 1000
+    max_to_keep: 10
+train_rng_seed: 0
+model_rng_seed: 0
+eval_every: 10
+fuse_train_and_test: true
+cloud_save: true
+hyperparameters:
+  n_epochs: 200
+  train_batch_size: 8192
+  eval_batch_size: 32768
+  shuffle_every_epoch: true
+  optax:
+    _target_: optax.adamw
+    learning_rate: 0.002774575125113392
+metrics:
+  _target_: flax.nnx.MultiMetric
+  loss:
+    _target_: flax.nnx.metrics.Average
+    argname: loss
+
+hydra:
+  searchpath:
+    - file://configs
+  run:
+    dir: trained_models/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  output_subdir: hydra

@@ -1,0 +1,67 @@
+defaults:
+  - datasets: HUGE_VANILLA_SIR_vonn_count_grid_10_steps_30 
+  - _self_
+
+model:
+  arch:
+    _target_: surrogate.priorcvae.vae.VAE
+    path_length: 93
+    params_dim: 5
+    latent_dim: 45
+    vae_var: 1
+    encoder_conf:
+      enc_class: surrogate.priorcvae.encoder.MLPEncoder
+      arch:
+        hidden_dim:
+        - - 1024
+          - 1024
+        - - 1024
+          - 1024
+        - - 1024
+          - 1024
+        hidden_activations: flax.nnx.sigmoid
+    decoder_conf:
+      dec_class: surrogate.priorcvae.decoder.MLPDecoder
+      arch:
+        hidden_dim:
+        - - 1024
+          - 1024
+        - - 1024
+          - 1024
+        - - 1024
+          - 1024
+        hidden_activations: flax.nnx.sigmoid
+        output_activation: flax.nnx.sigmoid
+  loss_fn: surrogate.priorcvae.vae.squared_sum_and_kl_loss
+logger:
+  use_console: true
+  use_wandb: false
+  checkpointer:
+    restore_path: null
+    save_every: 1000
+    max_to_keep: 10
+train_rng_seed: 0
+model_rng_seed: 0
+eval_every: 10
+fuse_train_and_test: true
+cloud_save: true
+hyperparameters:
+  n_epochs: 400
+  train_batch_size: 16384
+  eval_batch_size: 32768
+  shuffle_every_epoch: true
+  optax:
+    _target_: optax.adamw
+    learning_rate: 0.0046371057540627965
+metrics:
+  _target_: flax.nnx.MultiMetric
+  loss:
+    _target_: flax.nnx.metrics.Average
+    argname: loss
+
+hydra:
+  searchpath:
+    - file://configs
+  run:
+    dir: trained_models/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  output_subdir: hydra

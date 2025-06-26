@@ -1,0 +1,37 @@
+defaults:
+  - default
+  - override model: PriorCVAE
+  - override datasets: SI_diag_grid_40_steps_10
+  - _self_
+
+model:
+  arch:
+    latent_dim: 8
+    encoder_conf:
+      arch:
+        hidden_dim: [[256,256],[256,256],[256,256],[256,256]]
+    decoder_conf:
+      arch:
+        hidden_dim: [[256,256],[256,256],[256,256],[256,256]]
+        output_activation: flax.nnx.sigmoid 
+
+
+hyperparameters:
+  n_epochs: 200
+  train_batch_size: 50
+  shuffle_every_epoch: False 
+  
+  optax:
+    _target_: optax.adamw
+    learning_rate: 0.0011986757090718802 
+
+logger:
+  kwargs:
+    tags: [PriorCVAE, SI_diag_g40_s10]
+
+hydra:
+  searchpath:
+    - file://configs
+  run:
+    dir: trained_models/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  output_subdir: hydra

@@ -1,0 +1,13 @@
+use_console: True
+use_wandb: True
+
+
+kwargs:
+  project: dgs4abm
+  tags: []
+
+checkpointer:
+  restore_path: null
+  save_every: 60
+  max_to_keep: 10
+

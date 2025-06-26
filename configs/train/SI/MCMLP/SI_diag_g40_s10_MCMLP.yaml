@@ -1,0 +1,31 @@
+defaults:
+  - default
+  - override datasets: SI_diag_grid_40_steps_10
+  - _self_
+
+
+
+model:
+  arch:
+    hidden_dim: 256
+    num_layers: 3
+    output_activation: flax.nnx.sigmoid
+
+
+hyperparameters:
+  n_epochs: 200
+  train_batch_size: 50
+  shuffle_every_epoch: False 
+  
+  optax:
+    _target_: optax.adamw
+    learning_rate: 0.0010289209240463492 
+
+logger:
+  kwargs:
+    tags: [MCMLP, SI_diag_g40_s10]
+
+hydra:
+  searchpath:
+    - file://configs
+  output_subdir: hydra

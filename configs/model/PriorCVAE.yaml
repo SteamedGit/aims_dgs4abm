@@ -1,0 +1,21 @@
+arch:
+  _target_: surrogate.priorcvae.vae.VAE
+  path_length: 11
+  params_dim: 2
+  latent_dim: 4
+  vae_var: 1
+  
+  encoder_conf:
+    enc_class: surrogate.priorcvae.encoder.MLPEncoder
+    arch:
+      hidden_dim: [[60,60]] #First layer inferred
+      hidden_activations: flax.nnx.sigmoid
+  
+  decoder_conf:
+    dec_class: surrogate.priorcvae.decoder.MLPDecoder
+    arch:
+      hidden_dim: [[60,60]] #First layer inferred
+      hidden_activations: flax.nnx.sigmoid
+      output_activation: flax.nnx.sigmoid
+
+loss_fn: surrogate.priorcvae.vae.squared_sum_and_kl_loss

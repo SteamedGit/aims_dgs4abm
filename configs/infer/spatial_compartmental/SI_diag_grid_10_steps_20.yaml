@@ -1,0 +1,53 @@
+params:
+  p_infect: [0.01, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8]
+
+prop_initials:
+  prop_initial_infected: [0.01, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8]
+data_generation_seed: 1 # Used to generate data from the ABM
+n_sims: 50 
+inference_seed: 42 #Numpyro inference seed
+prior_predictive_seed: 6 #Numpyro prior pred seed
+cloud_save: True
+
+#TODO: Cloud Fetch
+#TODO: Do multiple times for each setting with different data seeds
+
+
+abm:
+  grid_size: 10
+  num_steps: 20
+  neighbourhood: 'diagonal'
+  numpyro_model: inference.spatial_compartmental.si.diag_cov_ABM_model
+  prior_num_samples: 50000
+  mcmc_algorithm: numpyro.infer.AIES
+  num_warmup: 2000
+  num_samples: 5000
+  num_chains: 32
+  chain_method: vectorized
+
+surrogates:
+  
+  mcmlp: 
+    checkpoint: trained_models/2025-04-24/14-07-00
+    func: __call__
+    numpyro_model: inference.spatial_compartmental.si.diag_cov_MCMLP_model
+    mcmc_algorithm: numpyro.infer.AIES
+    num_warmup: 2000
+    num_samples: 5000
+    num_chains: 32
+    chain_method: vectorized
+  
+  priorcvae:
+    checkpoint: trained_models/2025-04-24/14-12-20
+    func: generate_decoder_samples
+    numpyro_model: inference.spatial_compartmental.si.diag_cov_PriorCVAE_model
+    mcmc_algorithm: numpyro.infer.AIES
+    num_warmup: 2000
+    num_samples: 5000
+    num_chains: 32
+    chain_method: vectorized
+
+hydra:
+  run:
+    dir: inference_outputs/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  output_subdir: hydra

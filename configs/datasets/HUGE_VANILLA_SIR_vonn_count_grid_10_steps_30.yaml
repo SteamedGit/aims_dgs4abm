@@ -1,0 +1,33 @@
+train:
+  realisation: data/HUGE_VANILLA_SIR_vonn_count_grid_10_steps_30/train_realisations.npy
+  param: data/HUGE_VANILLA_SIR_vonn_count_grid_10_steps_30/train_param_labels.npy 
+
+test:
+  realisation: data/HUGE_VANILLA_SIR_vonn_count_grid_10_steps_30/test_realisations.npy
+  param: data/HUGE_VANILLA_SIR_vonn_count_grid_10_steps_30/test_param_labels.npy
+
+dataset_folder: data/HUGE_VANILLA_SIR_vonn_count_grid_10_steps_30
+grid_size: 10
+num_steps: 30
+lhs_seed: 42
+number_of_samples: 2000000
+data_generation_batch_size: 10000
+generation_seed: 0
+train_prop: 0.9
+neighbourhood: "von neumann"
+
+#p_inf, p_rec, p_wane, p_move, total_pop, initial_infected, initial_recovered
+num_params: 5
+lower_bounds: [0,0,0,-1,-1,0,0]
+upper_bounds: [1,1,1,-1,-1,1,1]
+
+no_move: true
+no_sparsity: true
+total_pop_idx: -1
+initial_inf_idx: 3
+initial_rec_idx: 4
+rel_proportion_indices: [3,4]
+is_image_dataset: False
+data_format: "flat"
+
+

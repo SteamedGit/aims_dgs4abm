@@ -1,0 +1,53 @@
+program: train.py
+metric:
+  name: test/loss
+  goal: minimize
+
+method: bayes
+parameters:
+  datasets:
+    value: VANILLA_SIR_vonn_count_grid_10_steps_200
+  eval_every:
+    value: 10
+  model:
+    value: MCMLP
+  model.arch.path_length:
+    value: 603
+  model.arch.input_dim:
+    value: 5
+  model.arch.output_activation: 
+    value: flax.nnx.sigmoid
+  model.arch.num_layers:
+    value: 3
+  model.arch.hidden_dim:
+    value: 2048
+  hyperparameters.optax.learning_rate:
+    min: 1e-6
+    max: 1e-2
+    distribution: log_uniform_values
+  hyperparameters.n_epochs:
+    values: [200,400]
+  hyperparameters.shuffle_every_epoch:
+    value: True
+  hyperparameters.train_batch_size:
+    value: 8192
+  hyperparameters.eval_batch_size:
+    value: 32768
+
+
+command:
+- ${env}
+- ${interpreter}
+- ${program}
+- "--config-name"
+- "basic"
+#Don't use checkpointing when sweeping
+- "logger.checkpointer.save_every=never"
+#These hydra options disable the creation of
+#output folders for all the runs
+- "hydra.output_subdir=null"
+- "hydra/job_logging=disabled"
+- "hydra/hydra_logging=disabled"
+- "hydra.run.dir=."
+- "logger.kwargs.tags=[MCMLP,VANILLA_SIR_vonn_count_g10_s200]" 
+- ${args_no_hyphens}

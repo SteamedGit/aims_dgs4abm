@@ -1,0 +1,31 @@
+train:
+  realisation: data/NO_MOVE_SIR_vonn_count_grid_10_steps_200/train_realisations.npy
+  param: data/NO_MOVE_SIR_vonn_count_grid_10_steps_200/train_param_labels.npy 
+
+test:
+  realisation: data/NO_MOVE_SIR_vonn_count_grid_10_steps_200/test_realisations.npy
+  param: data/NO_MOVE_SIR_vonn_count_grid_10_steps_200/test_param_labels.npy
+
+dataset_folder: data/NO_MOVE_SIR_vonn_count_grid_10_steps_200
+grid_size: 10
+num_steps: 200
+lhs_seed: 42
+number_of_samples: 200000
+data_generation_batch_size: 1000
+generation_seed: 0
+train_prop: 0.9
+neighbourhood: "von neumann"
+
+#p_inf, p_rec, p_wane, p_move, total_pop, initial_infected, initial_recovered
+num_params: 6
+lower_bounds: [0,0,0,-1,0,0,0]
+upper_bounds: [1,1,1,-1,1,1,1]
+
+no_move: true
+no_sparsity: false
+total_pop_idx: 3
+initial_inf_idx: 4
+initial_rec_idx: 5
+rel_proportion_indices: [4,5]
+is_image_dataset: False
+data_format: "flat"

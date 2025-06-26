@@ -1,0 +1,45 @@
+abm_params:
+- p_infect: 0.3
+  p_recover: 0.1
+  p_wane: 0.2
+  p_move: 0.0
+  total_population: 1.0
+  initial_infected: 0.05
+  initial_recovered: 0.7
+ 
+params_to_infer:
+  - "p_infect"
+  - "p_recover"
+  - "p_wane"
+
+skip_prediction: true
+data_generation_seed: 1 # Used to generate data from the ABM
+n_sims: 100 
+inference_seed: 42 #Numpyro inference seed
+prior_predictive_seed: 6 #Numpyro prior pred seed
+cloud_save: true
+
+abm:
+  grid_size: 10
+  num_steps: 30
+  neighbourhood: 'von neumann'
+
+model_name: abm
+prior_func: inference.spatial_compartmental.sir.no_move_prior
+numpyro_model: inference.spatial_compartmental.sir.full_cov_no_move_sir_ABM_model
+prior_num_samples: 50000
+mcmc_algorithm: numpyro.infer.AIES
+num_warmup: 5000
+num_samples: 300000
+num_chains: 32
+chain_method: vectorized
+
+### Predictive ###
+posterior_samples_path: inference_outputs/2025-06-10/17-45-38/posterior.npy
+subsample_seed: 3
+subsample_size: 100000
+
+hydra:
+  run:
+    dir: inference_outputs/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  output_subdir: hydra

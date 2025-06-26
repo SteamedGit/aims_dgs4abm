@@ -1,0 +1,8 @@
+defaults:
+  - default
+  - _self_
+
+hydra:
+  searchpath:
+    - file://configs
+  output_subdir: hydra

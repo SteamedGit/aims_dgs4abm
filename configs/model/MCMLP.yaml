@@ -1,0 +1,10 @@
+arch:
+  _target_: surrogate.mc_dropout.MCMLP
+  input_dim: 2
+  path_length: 11
+  num_layers: 3
+  hidden_dim: 128
+  p_drop: 0.5
+  output_activation: flax.nnx.sigmoid
+
+loss_fn: surrogate.mc_dropout.loss_fn

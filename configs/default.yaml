@@ -1,0 +1,31 @@
+defaults:
+  - model: MCMLP
+  - datasets: SI_grid_40_steps_10
+  - logger: default
+  - _self_
+
+train_rng_seed: 0
+model_rng_seed: 0
+eval_every: 20
+fuse_train_and_test: False
+cloud_save: False
+
+hyperparameters:
+  n_epochs: 50
+  train_batch_size: 50
+  eval_batch_size: 100
+  shuffle_every_epoch: False 
+  
+  optax:
+    _target_: optax.adamw
+    learning_rate: 5e-3
+
+metrics:
+  _target_: flax.nnx.MultiMetric
+  loss: 
+    _target_: flax.nnx.metrics.Average
+    argname: 'loss'
+
+hydra:
+  output_subdir: hydra
+
