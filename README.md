@@ -9,7 +9,7 @@ uv sync
 ```
 If you use UV you won't need to activate the virtual environment before running scripts. Simply use ```uv run``` instead of ```python```.
 
-Otherwise, you can use pip. Fist make sure that you're using Python >= 3.12. Next:
+Otherwise, you can use pip. First make sure that you're using Python >= 3.12. Next:
 ```
 pip install -r requirements.txt
 ```
