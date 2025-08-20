@@ -1,4 +1,6 @@
 # aims_dgs4abm
+This is the code to reproduce my MSc project conducted during my time at AIMS South Africa. For more context on this work, please refer to my [report](msc_project.pdf).
+
 
 ## Installation
 I highly recommend that you use [UV](https://docs.astral.sh/uv/):
